@@ -1,6 +1,8 @@
 import keyboard as kb
 from pywinauto.application import Application
-
+from threading import Timer
+import datetime
+import re
 
 title = ".*Timeline.*"
 timeline = Application()\
@@ -49,10 +51,36 @@ def start_timer(text):
     hourglass.set_focus()
     kb.send('Enter')  
 
+def note(res): 
+    timeline.set_focus()
+
+def start_timer_next(text):
+    time = datetime.datetime.now()
+    minute, second = (time.minute % 10), time.second
+
+    if minute >= 5: 
+        minute = 10 - (minute + 1)
+    else:
+        minute = 5 - (minute + 1)
+
+    OFFSET = 3
+    second = 60 - second + OFFSET
+
+    total = (minute * 60) + second
+
+    print(f'Timer will start in {minute}m {second}s from now')
+    timer = Timer(total, start_timer, [text])
+    timer.start()
+
+def capitalize(text):
+    return re.sub('^(.)', lambda m: m[0].upper(), text)
+
 commands = {
     'new time': new_time_entry,
     'new line': new_line,
     'more time': add_time,
     'stop timer': stop_timer,
-    'start timer': start_timer
+    'start timer next': start_timer_next,
+    'timeline': note,
+    'capitalize': capitalize
 }

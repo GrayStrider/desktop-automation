@@ -9,8 +9,6 @@ from routines import commands
 from process_response import process
 from util import timestamp
 
-HOTKEY = 'ctrl+alt+shift+f1'
-
 r = sr.Recognizer()
 
 ready = timestamp('Ready')
@@ -42,7 +40,10 @@ def main_loop():
         print("Could not request results from Google Speech Recognition service; {0}".format(e))
 
 ready()
-kb.add_hotkey(HOTKEY, main_loop)
-# kb.on_press(lambda e: print(e.scan_code))
+
+# kb.add_hotkey('shift+f1', main_loop)
+kb.add_hotkey(78, main_loop) # num plus; suppress stopped working, use ahk to block
+
+# kb.on_press(lambda e: print(e.scan_code, e.name))
 
 kb.wait()
